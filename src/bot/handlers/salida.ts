@@ -8,7 +8,7 @@ import { calculateShift } from '#/services/calculator';
 import { calculatePayment } from '#/services/payment';
 
 export function registerSalidaHandler(bot: any) {
-  bot.hears('salida', async (ctx: BotContext) => {
+  bot.hears(/^(salida)$/i, async (ctx: BotContext) => {
     const telegramId = String(ctx.from!.id);
 
     const user = await ctx.db.select().from(users).where(eq(users.telegramId, telegramId)).get();

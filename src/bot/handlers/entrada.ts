@@ -6,7 +6,7 @@ import { eq, and } from 'drizzle-orm';
 import { mainKeyboard } from '#/bot/keyboards';
 
 export function registerEntradaHandler(bot: any) {
-  bot.hears('entrada', async (ctx: BotContext) => {
+  bot.hears(/^(entrada)$/i, async (ctx: BotContext) => {
     const telegramId = String(ctx.from!.id);
     const now = nowInColombia();
 
