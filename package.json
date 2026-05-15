@@ -1,0 +1,22 @@
+{
+  "name": "worktime-bot",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "lint": "oxlint"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.2",
+    "grammy": "^1.42.0",
+    "hono": "^4.12.18"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260514.1",
+    "drizzle-kit": "^0.31.10",
+    "oxlint": "^1.64.0",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.4.0"
+  }
+}
