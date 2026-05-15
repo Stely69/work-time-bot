@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
-import { webhookCallback } from 'grammy';
-import { createBot } from '#/bot/client';
+import { Bot, Context } from 'grammy';
+import type { Update } from 'grammy/types';
+import type { DbInstance } from '#/db';
 import { createDb } from '#/db';
 import { registerEntradaHandler } from '#/bot/handlers/entrada';
 import { registerSalidaHandler } from '#/bot/handlers/salida';
@@ -18,11 +19,16 @@ const app = new Hono<{ Bindings: Env }>();
 
 app.get('/', (c) => c.text('WorkTime Bot is running!'));
 
-function setupBot(token: string, db: ReturnType<typeof createDb>) {
-  const bot = createBot(token, db);
+function setupBot(token: string, db: DbInstance) {
+  const bot = new Bot(token);
+
+  bot.use(async (ctx, next) => {
+    (ctx as any).db = db;
+    await next();
+  });
 
   bot.catch((err) => {
-    console.error('Bot error:', err);
+    console.error('Bot error:', err.message, err.error);
   });
 
   registerEntradaHandler(bot);
@@ -35,11 +41,22 @@ function setupBot(token: string, db: ReturnType<typeof createDb>) {
   return bot;
 }
 
+let botInstance: Bot | null = null;
+
 app.post('/webhook', async (c) => {
   try {
     const db = createDb(c.env.DB);
-    const bot = setupBot(c.env.BOT_TOKEN, db);
-    return await webhookCallback(bot, 'hono')(c);
+
+    if (!botInstance) {
+      botInstance = setupBot(c.env.BOT_TOKEN, db);
+    }
+
+    const update: Update = await c.req.json();
+    console.log('Update received:', JSON.stringify({ update_id: update.update_id, text: (update.message as any)?.text }));
+
+    await botInstance.handleUpdate(update);
+
+    return c.text('ok');
   } catch (err) {
     console.error('Webhook error:', err);
     return c.text('Error', 500);
