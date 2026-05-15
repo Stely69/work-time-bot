@@ -27,7 +27,7 @@ export const shifts = sqliteTable('shifts', {
 export const config = sqliteTable('config', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   userId: integer('user_id').notNull().unique().references(() => users.id),
-  hourlyRate: real('hourly_rate').default(7000),
+  hourlyRate: real('hourly_rate').default(8000),
   overtimeRate: real('overtime_rate').default(1.25),
   nightSurcharge: real('night_surcharge').default(1.35),
   holidaySurcharge: real('holiday_surcharge').default(1.75),
