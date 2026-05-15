@@ -1,13 +1,13 @@
 import { Hono } from 'hono';
 import { webhookCallback } from 'grammy';
-import { createBot } from './bot/client';
-import { createDb } from './db';
-import { registerEntradaHandler } from './bot/handlers/entrada';
-import { registerSalidaHandler } from './bot/handlers/salida';
-import { registerHoyHandler } from './bot/handlers/hoy';
-import { registerQuincenaHandler } from './bot/handlers/quincena';
-import { registerHistorialHandler } from './bot/handlers/historial';
-import { registerTarifaHandler } from './bot/handlers/tarifa';
+import { createBot } from '#/bot/client';
+import { createDb } from '#/db';
+import { registerEntradaHandler } from '#/bot/handlers/entrada';
+import { registerSalidaHandler } from '#/bot/handlers/salida';
+import { registerHoyHandler } from '#/bot/handlers/hoy';
+import { registerQuincenaHandler } from '#/bot/handlers/quincena';
+import { registerHistorialHandler } from '#/bot/handlers/historial';
+import { registerTarifaHandler } from '#/bot/handlers/tarifa';
 
 export type Env = {
   DB: D1Database;

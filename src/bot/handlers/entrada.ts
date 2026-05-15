@@ -1,9 +1,9 @@
-import type { BotContext } from '../client';
-import { nowInColombia, toISOLocal } from '../../utils/date';
-import { entradaResponse } from '../../utils/messages';
-import { users, shifts } from '../../db/schema';
+import type { BotContext } from '#/bot/client';
+import { nowInColombia, toISOLocal } from '#/utils/date';
+import { entradaResponse } from '#/utils/messages';
+import { users, shifts } from '#/db/schema';
 import { eq, and } from 'drizzle-orm';
-import { mainKeyboard } from '../keyboards';
+import { mainKeyboard } from '#/bot/keyboards';
 
 export function registerEntradaHandler(bot: any) {
   bot.hears('entrada', async (ctx: BotContext) => {

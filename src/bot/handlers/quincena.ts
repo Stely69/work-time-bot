@@ -1,9 +1,9 @@
-import type { BotContext } from '../client';
-import { toISOLocal } from '../../utils/date';
-import { quincenaResponse } from '../../utils/messages';
-import { users, shifts } from '../../db/schema';
+import type { BotContext } from '#/bot/client';
+import { toISOLocal } from '#/utils/date';
+import { quincenaResponse } from '#/utils/messages';
+import { users, shifts } from '#/db/schema';
 import { eq, and, gte, lte } from 'drizzle-orm';
-import { getCurrentPeriod } from '../../services/periods';
+import { getCurrentPeriod } from '#/services/periods';
 
 export function registerQuincenaHandler(bot: any) {
   bot.command('quincena', async (ctx: BotContext) => {

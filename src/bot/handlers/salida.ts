@@ -1,11 +1,11 @@
-import type { BotContext } from '../client';
-import { nowInColombia, toISOLocal, formatDate } from '../../utils/date';
-import { salidaResponse } from '../../utils/messages';
-import { users, shifts, config as configTable } from '../../db/schema';
+import type { BotContext } from '#/bot/client';
+import { nowInColombia, toISOLocal, formatDate } from '#/utils/date';
+import { salidaResponse } from '#/utils/messages';
+import { users, shifts, config as configTable } from '#/db/schema';
 import { eq, and } from 'drizzle-orm';
-import { mainKeyboard } from '../keyboards';
-import { calculateShift } from '../../services/calculator';
-import { calculatePayment } from '../../services/payment';
+import { mainKeyboard } from '#/bot/keyboards';
+import { calculateShift } from '#/services/calculator';
+import { calculatePayment } from '#/services/payment';
 
 export function registerSalidaHandler(bot: any) {
   bot.hears('salida', async (ctx: BotContext) => {

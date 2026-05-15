@@ -1,7 +1,7 @@
-import type { BotContext } from '../client';
-import { nowInColombia, formatDate, toISOLocal } from '../../utils/date';
-import { hoyResponse } from '../../utils/messages';
-import { users, shifts } from '../../db/schema';
+import type { BotContext } from '#/bot/client';
+import { nowInColombia, formatDate, toISOLocal } from '#/utils/date';
+import { hoyResponse } from '#/utils/messages';
+import { users, shifts } from '#/db/schema';
 import { eq, and, gte, lte } from 'drizzle-orm';
 
 export function registerHoyHandler(bot: any) {

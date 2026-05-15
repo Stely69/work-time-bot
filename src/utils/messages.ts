@@ -1,5 +1,5 @@
-import { formatDate, formatTime, formatDuration } from './date';
-import { formatCOP } from './numbers';
+import { formatDate, formatTime, formatDuration } from '#/utils/date';
+import { formatCOP } from '#/utils/numbers';
 
 interface ShiftSummary {
   date: string;

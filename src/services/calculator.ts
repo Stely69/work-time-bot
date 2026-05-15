@@ -1,6 +1,6 @@
-import { minutesSinceMidnight, dateOnly } from '../utils/date';
-import { isHoliday } from './colombian-holidays';
-import { isSunday } from '../utils/date';
+import { minutesSinceMidnight, dateOnly } from '#/utils/date';
+import { isHoliday } from '#/services/colombian-holidays';
+import { isSunday } from '#/utils/date';
 
 const NIGHT_START = 21 * 60;
 const NIGHT_END = 6 * 60 + 24 * 60;

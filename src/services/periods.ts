@@ -1,4 +1,4 @@
-import { nowInColombia } from '../utils/date';
+import { nowInColombia } from '#/utils/date';
 
 export interface QuincenaPeriod {
   start: Date;

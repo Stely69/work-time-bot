@@ -8,6 +8,9 @@
     "lib": [
       "ESNext"
     ],
+    "paths": {
+      "#/*": ["./src/*"]
+    },
     "types": [
       "@cloudflare/workers-types"
     ],

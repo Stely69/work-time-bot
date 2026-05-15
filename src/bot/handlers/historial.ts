@@ -1,7 +1,7 @@
-import type { BotContext } from '../client';
-import { users, shifts } from '../../db/schema';
+import type { BotContext } from '#/bot/client';
+import { users, shifts } from '#/db/schema';
 import { eq, and, desc } from 'drizzle-orm';
-import { historialResponse } from '../../utils/messages';
+import { historialResponse } from '#/utils/messages';
 
 export function registerHistorialHandler(bot: any) {
   bot.command('historial', async (ctx: BotContext) => {

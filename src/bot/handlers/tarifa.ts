@@ -1,7 +1,7 @@
-import type { BotContext } from '../client';
-import { users, config as configTable } from '../../db/schema';
+import type { BotContext } from '#/bot/client';
+import { users, config as configTable } from '#/db/schema';
 import { eq } from 'drizzle-orm';
-import { tarifaResponse, errorMessage } from '../../utils/messages';
+import { tarifaResponse, errorMessage } from '#/utils/messages';
 
 export function registerTarifaHandler(bot: any) {
   bot.command('tarifa', async (ctx: BotContext) => {
