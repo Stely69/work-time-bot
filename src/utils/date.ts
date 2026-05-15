@@ -1,5 +1,3 @@
-const COLOMBIA_TZ = 'America/Bogota';
-
 export function nowInColombia(): Date {
   const now = new Date();
   const colombiaOffset = -5 * 60;

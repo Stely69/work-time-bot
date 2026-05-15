@@ -1,9 +1,7 @@
-import { minutesSinceMidnight, dateOnly, nowInColombia } from '../utils/date';
+import { minutesSinceMidnight, dateOnly } from '../utils/date';
 import { isHoliday } from './colombian-holidays';
 import { isSunday } from '../utils/date';
 
-const REGULAR_START = 6 * 60;
-const REGULAR_END = 21 * 60;
 const NIGHT_START = 21 * 60;
 const NIGHT_END = 6 * 60 + 24 * 60;
 
@@ -19,12 +17,6 @@ export interface ShiftResult {
   nightMinutes: number;
   holidayMinutes: number;
   sundayMinutes: number;
-}
-
-function classifyMinute(m: number, holiday: boolean, sunday: boolean) {
-  const inNight = m >= NIGHT_START || m < 6 * 60;
-  const inRegular = !inNight;
-  return { inNight, inRegular, isHoliday: holiday, isSunday: sunday };
 }
 
 export function calculateShift(startTime: Date, endTime: Date): ShiftResult {

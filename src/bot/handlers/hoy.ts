@@ -1,10 +1,8 @@
 import type { BotContext } from '../client';
 import { nowInColombia, formatDate, toISOLocal } from '../../utils/date';
 import { hoyResponse } from '../../utils/messages';
-import { users, shifts, config as configTable } from '../../db/schema';
-import { eq, and, gte, lte, sql } from 'drizzle-orm';
-import { calculateShift } from '../../services/calculator';
-import { calculatePayment } from '../../services/payment';
+import { users, shifts } from '../../db/schema';
+import { eq, and, gte, lte } from 'drizzle-orm';
 
 export function registerHoyHandler(bot: any) {
   bot.command('hoy', async (ctx: BotContext) => {

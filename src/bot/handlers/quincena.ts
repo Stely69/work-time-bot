@@ -1,10 +1,9 @@
 import type { BotContext } from '../client';
-import { nowInColombia, toISOLocal } from '../../utils/date';
+import { toISOLocal } from '../../utils/date';
 import { quincenaResponse } from '../../utils/messages';
-import { users, shifts, config as configTable } from '../../db/schema';
+import { users, shifts } from '../../db/schema';
 import { eq, and, gte, lte } from 'drizzle-orm';
 import { getCurrentPeriod } from '../../services/periods';
-import { calculatePayment } from '../../services/payment';
 
 export function registerQuincenaHandler(bot: any) {
   bot.command('quincena', async (ctx: BotContext) => {
