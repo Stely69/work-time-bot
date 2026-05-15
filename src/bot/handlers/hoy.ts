@@ -1,5 +1,5 @@
 import type { BotContext } from '#/bot/client';
-import { nowInColombia, formatDate, toISOLocal } from '#/utils/date';
+import { colombiaDateParts, colombiaNowUTC, formatDateColombia, colombiaDayToUTCRange } from '#/utils/date';
 import { hoyResponse } from '#/utils/messages';
 import { users, shifts } from '#/db/schema';
 import { eq, and, gte, lte } from 'drizzle-orm';
@@ -15,8 +15,9 @@ export function registerHoyHandler(bot: any) {
       return;
     }
 
-    const today = nowInColombia();
-    const todayStr = toISOLocal(today).slice(0, 10);
+    const today = colombiaNowUTC();
+    const { year, month, day } = colombiaDateParts(today);
+    const { startUTC, endUTC } = colombiaDayToUTCRange(year, month, day);
 
     const dayShifts = await ctx.db.select()
       .from(shifts)
@@ -24,8 +25,8 @@ export function registerHoyHandler(bot: any) {
         and(
           eq(shifts.userId, user.id),
           eq(shifts.status, 'completed'),
-          gte(shifts.startTime, todayStr + 'T00:00:00'),
-          lte(shifts.startTime, todayStr + 'T23:59:59')
+          gte(shifts.startTime, startUTC),
+          lte(shifts.startTime, endUTC)
         )
       )
       .all();
@@ -55,7 +56,7 @@ export function registerHoyHandler(bot: any) {
 
     await ctx.reply(
       hoyResponse({
-        date: formatDate(today),
+        date: formatDateColombia(today),
         startTime: today,
         endTime: today,
         totalMinutes,

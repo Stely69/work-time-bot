@@ -1,5 +1,5 @@
 import type { BotContext } from '#/bot/client';
-import { nowInColombia, toISOLocal } from '#/utils/date';
+import { colombiaNowUTC } from '#/utils/date';
 import { entradaResponse } from '#/utils/messages';
 import { users, shifts } from '#/db/schema';
 import { eq, and } from 'drizzle-orm';
@@ -8,7 +8,7 @@ import { mainKeyboard } from '#/bot/keyboards';
 export function registerEntradaHandler(bot: any) {
   bot.hears(/^(entrada)$/i, async (ctx: BotContext) => {
     const telegramId = String(ctx.from!.id);
-    const now = nowInColombia();
+    const now = colombiaNowUTC();
 
     let user = await ctx.db.select().from(users).where(eq(users.telegramId, telegramId)).get();
 
@@ -32,7 +32,7 @@ export function registerEntradaHandler(bot: any) {
 
     await ctx.db.insert(shifts).values({
       userId: user.id,
-      startTime: toISOLocal(now),
+      startTime: now.toISOString(),
       status: 'active',
     }).run();
 

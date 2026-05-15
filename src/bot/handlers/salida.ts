@@ -1,5 +1,5 @@
 import type { BotContext } from '#/bot/client';
-import { nowInColombia, toISOLocal, formatDate } from '#/utils/date';
+import { colombiaNowUTC, formatDateColombia } from '#/utils/date';
 import { salidaResponse } from '#/utils/messages';
 import { users, shifts, config as configTable } from '#/db/schema';
 import { eq, and } from 'drizzle-orm';
@@ -28,9 +28,8 @@ export function registerSalidaHandler(bot: any) {
       return;
     }
 
-    const endTime = nowInColombia();
-    const startTime = new Date(activeShift.startTime + 'Z');
-    startTime.setHours(startTime.getHours() - 5);
+    const endTime = colombiaNowUTC();
+    const startTime = new Date(activeShift.startTime);
 
     const result = calculateShift(startTime, endTime);
 
@@ -60,7 +59,7 @@ export function registerSalidaHandler(bot: any) {
 
     await ctx.db.update(shifts)
       .set({
-        endTime: toISOLocal(endTime),
+        endTime: endTime.toISOString(),
         regularHours: Math.round(result.regularMinutes / 60 * 100) / 100,
         overtimeHours: Math.round(result.overtimeMinutes / 60 * 100) / 100,
         nightHours: Math.round(result.nightMinutes / 60 * 100) / 100,
@@ -74,7 +73,7 @@ export function registerSalidaHandler(bot: any) {
 
     await ctx.reply(
       salidaResponse({
-        date: formatDate(endTime),
+        date: formatDateColombia(endTime),
         startTime,
         endTime,
         totalMinutes: result.totalMinutes,

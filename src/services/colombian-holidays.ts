@@ -13,22 +13,22 @@ function easterDate(year: number): Date {
   const m = Math.floor((a + 11 * h + 22 * l) / 451);
   const month = Math.floor((h + l - 7 * m + 114) / 31);
   const day = ((h + l - 7 * m + 114) % 31) + 1;
-  return new Date(year, month - 1, day);
+  return new Date(Date.UTC(year, month - 1, day));
 }
 
 function nextMonday(d: Date): Date {
-  const result = new Date(d);
-  const dow = result.getDay();
-  if (dow !== 1) {
-    result.setDate(result.getDate() + (7 - dow + 1) % 7 || 7);
-  }
-  return result;
+  const dow = d.getUTCDay();
+  if (dow === 1) return new Date(d);
+  const add = (7 - dow + 1) % 7 || 7;
+  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + add));
 }
 
 function addDays(d: Date, n: number): Date {
-  const r = new Date(d);
-  r.setDate(r.getDate() + n);
-  return r;
+  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + n));
+}
+
+function dateKey(d: Date): string {
+  return `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
 }
 
 export function getColombianHolidays(year: number): Date[] {
@@ -61,11 +61,11 @@ export function getColombianHolidays(year: number): Date[] {
   const holidays: Date[] = [];
 
   for (const [month, day, emiliani] of fixedHolidays) {
-    const d = new Date(year, month - 1, day);
+    const d = new Date(Date.UTC(year, month - 1, day));
     if (emiliani) {
       holidays.push(nextMonday(d));
     } else {
-      const dow = d.getDay();
+      const dow = d.getUTCDay();
       if (dow === 0 || dow === 6) {
         holidays.push(nextMonday(d));
       } else {
@@ -78,7 +78,7 @@ export function getColombianHolidays(year: number): Date[] {
     holidays.push(d);
   }
 
-  return holidays.map(d => new Date(d.getFullYear(), d.getMonth(), d.getDate()));
+  return holidays.map(d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())));
 }
 
 const holidayCache = new Map<number, Set<string>>();
@@ -86,13 +86,13 @@ const holidayCache = new Map<number, Set<string>>();
 function getHolidaySet(year: number): Set<string> {
   if (holidayCache.has(year)) return holidayCache.get(year)!;
   const holidays = getColombianHolidays(year);
-  const set = new Set(holidays.map(d => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`));
+  const set = new Set(holidays.map(d => dateKey(d)));
   holidayCache.set(year, set);
   return set;
 }
 
 export function isHoliday(date: Date): boolean {
-  const year = date.getFullYear();
+  const year = date.getUTCFullYear();
   const set = getHolidaySet(year);
-  return set.has(`${year}-${date.getMonth() + 1}-${date.getDate()}`);
+  return set.has(dateKey(date));
 }

@@ -1,45 +1,40 @@
-import { nowInColombia } from '#/utils/date';
+import { colombiaDateParts, colombiaNowUTC } from '#/utils/date';
 
 export interface QuincenaPeriod {
-  start: Date;
-  end: Date;
+  startColombia: { year: number; month: number; day: number };
+  endColombia: { year: number; month: number; day: number };
   label: string;
 }
 
-export function getCurrentPeriod(date: Date = nowInColombia()): QuincenaPeriod {
-  const day = date.getDate();
-  const month = date.getMonth();
-  const year = date.getFullYear();
+const monthNames = [
+  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
+];
 
-  let start: Date;
-  let end: Date;
+export function getCurrentPeriod(now?: Date): QuincenaPeriod {
+  const { year, month, day } = colombiaDateParts(now ?? colombiaNowUTC());
+
+  let startYear: number, startMonth: number, startDay: number;
+  let endYear: number, endMonth: number, endDay: number;
 
   if (day >= 11 && day <= 25) {
-    start = new Date(year, month, 11);
-    end = new Date(year, month, 25);
+    startYear = year; startMonth = month; startDay = 11;
+    endYear = year; endMonth = month; endDay = 25;
   } else if (day >= 26) {
-    start = new Date(year, month, 26);
-    end = new Date(year, month + 1, 10);
+    startYear = year; startMonth = month; startDay = 26;
+    endYear = year; endMonth = month + 1; endDay = 10;
+    if (endMonth > 11) { endYear++; endMonth -= 12; }
   } else {
-    start = new Date(year, month - 1, 26);
-    end = new Date(year, month, 10);
+    startYear = year; startMonth = month - 1; startDay = 26;
+    if (startMonth < 0) { startYear--; startMonth += 12; }
+    endYear = year; endMonth = month; endDay = 10;
   }
 
-  const monthNames = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
-  ];
+  const label = `${startDay} ${monthNames[startMonth]} → ${endDay} ${monthNames[endMonth]}`;
 
-  const label = `${start.getDate()} ${monthNames[start.getMonth()]} → ${end.getDate()} ${monthNames[end.getMonth()]}`;
-
-  return { start, end, label };
-}
-
-export function isInCurrentPeriod(date: Date, period: QuincenaPeriod): boolean {
-  const d = date.getTime();
-  const s = new Date(period.start);
-  s.setHours(0, 0, 0, 0);
-  const e = new Date(period.end);
-  e.setHours(23, 59, 59, 999);
-  return d >= s.getTime() && d <= e.getTime();
+  return {
+    startColombia: { year: startYear, month: startMonth, day: startDay },
+    endColombia: { year: endYear, month: endMonth, day: endDay },
+    label,
+  };
 }

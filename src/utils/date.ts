@@ -1,25 +1,57 @@
-export function nowInColombia(): Date {
-  const now = new Date();
-  const colombiaOffset = -5 * 60;
-  const localOffset = now.getTimezoneOffset();
-  const diff = colombiaOffset - localOffset;
-  return new Date(now.getTime() + diff * 60 * 1000);
+const COLOMBIA_OFFSET_MS = -5 * 3600 * 1000;
+
+export function toColombia(utcDate: Date): Date {
+  return new Date(utcDate.getTime() + COLOMBIA_OFFSET_MS);
 }
 
-export function formatDate(d: Date): string {
+function cp(utcDate: Date) {
+  const d = toColombia(utcDate);
+  return {
+    year: d.getUTCFullYear(),
+    month: d.getUTCMonth(),
+    day: d.getUTCDate(),
+    hours: d.getUTCHours(),
+    minutes: d.getUTCMinutes(),
+    weekday: d.getUTCDay(),
+  };
+}
+
+export function colombiaMinutes(utcDate: Date): number {
+  const { hours, minutes } = cp(utcDate);
+  return hours * 60 + minutes;
+}
+
+export function colombiaDateStr(utcDate: Date): string {
+  const { year, month, day } = cp(utcDate);
+  return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
+export function colombiaDayOfWeek(utcDate: Date): number {
+  return cp(utcDate).weekday;
+}
+
+export function colombiaIsSunday(utcDate: Date): boolean {
+  return colombiaDayOfWeek(utcDate) === 0;
+}
+
+export function colombiaDateParts(utcDate: Date) {
+  return cp(utcDate);
+}
+
+export function formatDateColombia(utcDate: Date): string {
+  const { year, month, day } = cp(utcDate);
   const months = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
   ];
-  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  return `${day} ${months[month]} ${year}`;
 }
 
-export function formatTime(d: Date): string {
-  const h = d.getHours();
-  const m = d.getMinutes();
-  const ampm = h >= 12 ? 'PM' : 'AM';
-  const h12 = h % 12 || 12;
-  return `${h12}:${m.toString().padStart(2, '0')} ${ampm}`;
+export function formatTimeColombia(utcDate: Date): string {
+  const { hours, minutes } = cp(utcDate);
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const h12 = hours % 12 || 12;
+  return `${h12}:${String(minutes).padStart(2, '0')} ${ampm}`;
 }
 
 export function formatDuration(totalMinutes: number): string {
@@ -33,34 +65,15 @@ export function formatDuration(totalMinutes: number): string {
 export function formatTimeColon(totalMinutes: number): string {
   const h = Math.floor(totalMinutes / 60);
   const m = Math.round(totalMinutes % 60);
-  return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
 
-export function toISOLocal(d: Date): string {
-  const y = d.getFullYear();
-  const m = (d.getMonth() + 1).toString().padStart(2, '0');
-  const day = d.getDate().toString().padStart(2, '0');
-  const h = d.getHours().toString().padStart(2, '0');
-  const min = d.getMinutes().toString().padStart(2, '0');
-  const s = d.getSeconds().toString().padStart(2, '0');
-  return `${y}-${m}-${day}T${h}:${min}:${s}`;
+export function colombiaDayToUTCRange(year: number, month: number, day: number) {
+  const start = new Date(Date.UTC(year, month, day, 5, 0, 0)).toISOString();
+  const end = new Date(Date.UTC(year, month, day + 1, 4, 59, 59, 999)).toISOString();
+  return { startUTC: start, endUTC: end };
 }
 
-export function minutesSinceMidnight(d: Date): number {
-  return d.getHours() * 60 + d.getMinutes();
-}
-
-export function getDayOfWeek(d: Date): number {
-  return d.getDay();
-}
-
-export function isSunday(d: Date): boolean {
-  return getDayOfWeek(d) === 0;
-}
-
-export function dateOnly(d: Date): string {
-  const y = d.getFullYear();
-  const m = (d.getMonth() + 1).toString().padStart(2, '0');
-  const day = d.getDate().toString().padStart(2, '0');
-  return `${y}-${m}-${day}`;
+export function colombiaNowUTC(): Date {
+  return new Date();
 }

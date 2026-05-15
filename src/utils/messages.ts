@@ -1,4 +1,4 @@
-import { formatDate, formatTime, formatDuration } from '#/utils/date';
+import { formatDateColombia, formatTimeColombia, formatDuration } from '#/utils/date';
 import { formatCOP } from '#/utils/numbers';
 
 interface ShiftSummary {
@@ -19,10 +19,10 @@ export function entradaResponse(date: Date): string {
     `✅ Entrada registrada`,
     ``,
     `📅 Fecha:`,
-    `  ${formatDate(date)}`,
+    `  ${formatDateColombia(date)}`,
     ``,
     `🕒 Hora de inicio:`,
-    `  ${formatTime(date)}`,
+    `  ${formatTimeColombia(date)}`,
   ].join('\n');
 }
 
@@ -34,10 +34,10 @@ export function salidaResponse(s: ShiftSummary): string {
     `  ${s.date}`,
     ``,
     `🕒 Entrada:`,
-    `  ${formatTime(s.startTime)}`,
+    `  ${formatTimeColombia(s.startTime)}`,
     ``,
     `🕘 Salida:`,
-    `  ${formatTime(s.endTime)}`,
+    `  ${formatTimeColombia(s.endTime)}`,
     ``,
     `⏱️ Total trabajado:`,
     `  ${formatDuration(s.totalMinutes)}`,

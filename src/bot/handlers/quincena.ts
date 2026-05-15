@@ -1,5 +1,5 @@
 import type { BotContext } from '#/bot/client';
-import { toISOLocal } from '#/utils/date';
+import { colombiaDayToUTCRange, colombiaNowUTC } from '#/utils/date';
 import { quincenaResponse } from '#/utils/messages';
 import { users, shifts } from '#/db/schema';
 import { eq, and, gte, lte } from 'drizzle-orm';
@@ -17,8 +17,12 @@ export function registerQuincenaHandler(bot: any) {
     }
 
     const period = getCurrentPeriod();
-    const startStr = toISOLocal(period.start).slice(0, 10);
-    const endStr = toISOLocal(period.end).slice(0, 10);
+    const { startUTC } = colombiaDayToUTCRange(
+      period.startColombia.year, period.startColombia.month, period.startColombia.day
+    );
+    const { endUTC } = colombiaDayToUTCRange(
+      period.endColombia.year, period.endColombia.month, period.endColombia.day
+    );
 
     const periodShifts = await ctx.db.select()
       .from(shifts)
@@ -26,8 +30,8 @@ export function registerQuincenaHandler(bot: any) {
         and(
           eq(shifts.userId, user.id),
           eq(shifts.status, 'completed'),
-          gte(shifts.startTime, startStr + 'T00:00:00'),
-          lte(shifts.startTime, endStr + 'T23:59:59')
+          gte(shifts.startTime, startUTC),
+          lte(shifts.startTime, endUTC)
         )
       )
       .all();
