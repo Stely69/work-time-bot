@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { Bot, Context } from 'grammy';
+import { Bot } from 'grammy';
 import type { Update } from 'grammy/types';
 import type { DbInstance } from '#/db';
 import { createDb } from '#/db';
@@ -42,6 +42,7 @@ function setupBot(token: string, db: DbInstance) {
 }
 
 let botInstance: Bot | null = null;
+let botInit: Promise<void> | null = null;
 
 app.post('/webhook', async (c) => {
   try {
@@ -49,11 +50,13 @@ app.post('/webhook', async (c) => {
 
     if (!botInstance) {
       botInstance = setupBot(c.env.BOT_TOKEN, db);
+      botInit = botInstance.init();
     }
 
     const update: Update = await c.req.json();
     console.log('Update received:', JSON.stringify({ update_id: update.update_id, text: (update.message as any)?.text }));
 
+    await botInit;
     await botInstance.handleUpdate(update);
 
     return c.text('ok');
