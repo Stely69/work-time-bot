@@ -18,9 +18,12 @@ const app = new Hono<{ Bindings: Env }>();
 
 app.get('/', (c) => c.text('WorkTime Bot is running!'));
 
-app.post('/webhook', async (c) => {
-  const db = createDb(c.env.DB);
-  const bot = createBot(c.env.BOT_TOKEN, db);
+function setupBot(token: string, db: ReturnType<typeof createDb>) {
+  const bot = createBot(token, db);
+
+  bot.catch((err) => {
+    console.error('Bot error:', err);
+  });
 
   registerEntradaHandler(bot);
   registerSalidaHandler(bot);
@@ -29,7 +32,18 @@ app.post('/webhook', async (c) => {
   registerHistorialHandler(bot);
   registerTarifaHandler(bot);
 
-  return webhookCallback(bot, 'hono')(c);
+  return bot;
+}
+
+app.post('/webhook', async (c) => {
+  try {
+    const db = createDb(c.env.DB);
+    const bot = setupBot(c.env.BOT_TOKEN, db);
+    return await webhookCallback(bot, 'hono')(c);
+  } catch (err) {
+    console.error('Webhook error:', err);
+    return c.text('Error', 500);
+  }
 });
 
 export default app;
