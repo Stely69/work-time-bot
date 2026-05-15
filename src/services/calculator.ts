@@ -1,7 +1,7 @@
 import { colombiaMinutes, colombiaDateStr, colombiaIsSunday } from '#/utils/date';
 import { isHoliday } from '#/services/colombian-holidays';
 
-const NIGHT_START = 21 * 60;
+const NIGHT_START = 19 * 60;
 const MAX_REGULAR_MINUTES = 8 * 60;
 
 export interface ShiftResult {
