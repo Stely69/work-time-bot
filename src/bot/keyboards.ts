@@ -1,9 +1,9 @@
 import { Keyboard } from 'grammy';
 
 export const mainKeyboard = new Keyboard()
-  .text('entrada')
-  .text('salida')
+  .text('Entrada')
+  .text('Salida')
   .row()
-  .text('/quincena')
+  .text('Quincena')
   .resized()
   .persistent();
