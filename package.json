@@ -8,7 +8,10 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-    "lint": "oxlint"
+    "lint": "oxlint",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply worktime-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply worktime-db --remote"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.2",
