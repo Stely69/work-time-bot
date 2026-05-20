@@ -4,16 +4,24 @@ interface PaymentConfig {
   nightSurcharge: number;
   nightOvertimeRate: number;
   holidaySurcharge: number;
+  holidayOvertimeRate: number;
+  holidayNightOvertimeRate: number;
   sundaySurcharge: number;
+  sundayOvertimeRate: number;
+  sundayNightOvertimeRate: number;
 }
 
 interface HoursBreakdown {
   regularMinutes: number;
-  overtimeMinutes: number;
   nightMinutes: number;
+  overtimeMinutes: number;
   nightOvertimeMinutes: number;
   holidayMinutes: number;
+  holidayOvertimeMinutes: number;
+  holidayNightOvertimeMinutes: number;
   sundayMinutes: number;
+  sundayOvertimeMinutes: number;
+  sundayNightOvertimeMinutes: number;
 }
 
 export function calculatePayment(
@@ -21,15 +29,24 @@ export function calculatePayment(
   config: PaymentConfig
 ): number {
   const toHours = (m: number) => m / 60;
-
   const base = config.hourlyRate;
 
   const regular = toHours(hours.regularMinutes) * base;
-  const overtime = toHours(hours.overtimeMinutes) * base * config.overtimeRate;
   const night = toHours(hours.nightMinutes) * base * config.nightSurcharge;
+  const overtime = toHours(hours.overtimeMinutes) * base * config.overtimeRate;
   const nightOvertime = toHours(hours.nightOvertimeMinutes) * base * config.nightOvertimeRate;
-  const holiday = toHours(hours.holidayMinutes) * base * config.holidaySurcharge;
-  const sunday = toHours(hours.sundayMinutes) * base * config.sundaySurcharge;
 
-  return regular + overtime + night + nightOvertime + holiday + sunday;
+  const holiday = toHours(hours.holidayMinutes) * base * config.holidaySurcharge;
+  const holidayOvertime = toHours(hours.holidayOvertimeMinutes) * base * config.holidayOvertimeRate;
+  const holidayNightOvertime = toHours(hours.holidayNightOvertimeMinutes) * base * config.holidayNightOvertimeRate;
+
+  const sunday = toHours(hours.sundayMinutes) * base * config.sundaySurcharge;
+  const sundayOvertime = toHours(hours.sundayOvertimeMinutes) * base * config.sundayOvertimeRate;
+  const sundayNightOvertime = toHours(hours.sundayNightOvertimeMinutes) * base * config.sundayNightOvertimeRate;
+
+  return Math.round(
+    regular + night + overtime + nightOvertime +
+    holiday + holidayOvertime + holidayNightOvertime +
+    sunday + sundayOvertime + sundayNightOvertime
+  );
 }

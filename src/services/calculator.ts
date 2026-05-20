@@ -1,20 +1,22 @@
 import { colombiaMinutes, colombiaDateStr, colombiaIsSunday } from '#/utils/date';
 import { isHoliday } from '#/services/colombian-holidays';
 
-const NIGHT_START = 19 * 60;
+const NIGHT_START = 21 * 60;
 const MAX_REGULAR_MINUTES = 8 * 60;
 
 export interface ShiftResult {
   date: string;
-  isHoliday: boolean;
-  isSunday: boolean;
   totalMinutes: number;
   regularMinutes: number;
-  overtimeMinutes: number;
   nightMinutes: number;
+  overtimeMinutes: number;
   nightOvertimeMinutes: number;
   holidayMinutes: number;
+  holidayOvertimeMinutes: number;
+  holidayNightOvertimeMinutes: number;
   sundayMinutes: number;
+  sundayOvertimeMinutes: number;
+  sundayNightOvertimeMinutes: number;
 }
 
 export function calculateShift(startTime: Date, endTime: Date): ShiftResult {
@@ -26,72 +28,77 @@ export function calculateShift(startTime: Date, endTime: Date): ShiftResult {
 
   const sameDay = startDay === endDay;
   const isHol = isHoliday(startTime);
-  const isSun = isHoliday(startTime) ? false : colombiaIsSunday(startTime);
-
-  let totalMinutes = 0;
-  let regularMinutes = 0;
-  let overtimeMinutes = 0;
-  let nightMinutes = 0;
-  let nightOvertimeMinutes = 0;
-  let holidayMinutes = 0;
-  let sundayMinutes = 0;
+  const isSun = colombiaIsSunday(startTime);
 
   function stepMinute(m: number) {
     return m >= NIGHT_START || m < 6 * 60;
   }
 
-  if (sameDay) {
-    totalMinutes = endMinutes - startMinutes;
+  const totalMinutes = sameDay
+    ? endMinutes - startMinutes
+    : (24 * 60 - startMinutes) + endMinutes;
+
+  let workedMinutes = 0;
+  let regularMinutes = 0;
+  let nightMinutes = 0;
+  let overtimeMinutes = 0;
+  let nightOvertimeMinutes = 0;
+  let holidayMinutes = 0;
+  let holidayOvertimeMinutes = 0;
+  let holidayNightOvertimeMinutes = 0;
+  let sundayMinutes = 0;
+  let sundayOvertimeMinutes = 0;
+  let sundayNightOvertimeMinutes = 0;
+
+  function classifyMinute(m: number) {
+    workedMinutes++;
+    const isNight = stepMinute(m);
+    const isOvertime = workedMinutes > MAX_REGULAR_MINUTES;
 
     if (isHol) {
-      holidayMinutes = totalMinutes;
+      if (isNight && isOvertime) holidayNightOvertimeMinutes++;
+      else if (isOvertime) holidayOvertimeMinutes++;
+      else holidayMinutes++;
     } else if (isSun) {
-      sundayMinutes = totalMinutes;
+      if (isNight && isOvertime) sundayNightOvertimeMinutes++;
+      else if (isOvertime) sundayOvertimeMinutes++;
+      else sundayMinutes++;
+    } else if (isNight && isOvertime) {
+      nightOvertimeMinutes++;
+    } else if (isNight) {
+      nightMinutes++;
+    } else if (isOvertime) {
+      overtimeMinutes++;
     } else {
-      for (let m = startMinutes; m < endMinutes; m++) {
-        if (stepMinute(m)) nightMinutes++;
-        else regularMinutes++;
-      }
-    }
-  } else {
-    totalMinutes = (24 * 60 - startMinutes) + endMinutes;
-
-    if (isHol) {
-      holidayMinutes = totalMinutes;
-    } else if (isSun) {
-      sundayMinutes = totalMinutes;
-    } else {
-      for (let m = startMinutes; m < 24 * 60; m++) {
-        if (stepMinute(m)) nightMinutes++;
-        else regularMinutes++;
-      }
-      for (let m = 0; m < endMinutes; m++) {
-        if (stepMinute(m)) nightMinutes++;
-        else regularMinutes++;
-      }
+      regularMinutes++;
     }
   }
 
-  if (!isHol && !isSun) {
-    if (regularMinutes + nightMinutes > MAX_REGULAR_MINUTES) {
-      const excess = regularMinutes + nightMinutes - MAX_REGULAR_MINUTES;
-      nightOvertimeMinutes = Math.min(excess, nightMinutes);
-      nightMinutes -= nightOvertimeMinutes;
-      regularMinutes -= excess - nightOvertimeMinutes;
-      overtimeMinutes = excess;
+  if (sameDay) {
+    for (let m = startMinutes; m < endMinutes; m++) {
+      classifyMinute(m);
+    }
+  } else {
+    for (let m = startMinutes; m < 24 * 60; m++) {
+      classifyMinute(m);
+    }
+    for (let m = 0; m < endMinutes; m++) {
+      classifyMinute(m);
     }
   }
 
   return {
     date: startDay,
-    isHoliday: isHol,
-    isSunday: isSun,
     totalMinutes,
     regularMinutes,
-    overtimeMinutes,
     nightMinutes,
+    overtimeMinutes,
     nightOvertimeMinutes,
     holidayMinutes,
+    holidayOvertimeMinutes,
+    holidayNightOvertimeMinutes,
     sundayMinutes,
+    sundayOvertimeMinutes,
+    sundayNightOvertimeMinutes,
   };
 }

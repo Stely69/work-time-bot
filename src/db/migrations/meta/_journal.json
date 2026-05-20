@@ -15,6 +15,20 @@
       "when": 1779246666810,
       "tag": "0001_heavy_black_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1779247847642,
+      "tag": "0002_gorgeous_ironclad",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1779250830963,
+      "tag": "0003_round_manta",
+      "breakpoints": true
     }
   ]
 }

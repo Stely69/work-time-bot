@@ -30,7 +30,14 @@ export function registerHistorialHandler(bot: any) {
       const start = s.startTime.slice(11, 16);
       const end = s.endTime ? s.endTime.slice(11, 16) : '—';
 
-      const totalH = (s.regularHours ?? 0) + (s.overtimeHours ?? 0) + (s.nightHours ?? 0) + (s.nightOvertimeHours ?? 0) + (s.holidayHours ?? 0) + (s.sundayHours ?? 0);
+      const totalH = (
+        (s.regularHours ?? 0) + (s.nightHours ?? 0) +
+        (s.overtimeHours ?? 0) + (s.nightOvertimeHours ?? 0) +
+        (s.holidayHours ?? 0) + (s.holidayOvertimeHours ?? 0) +
+        (s.holidayNightOvertimeHours ?? 0) +
+        (s.sundayHours ?? 0) + (s.sundayOvertimeHours ?? 0) +
+        (s.sundayNightOvertimeHours ?? 0)
+      );
       const totalMin = Math.round(totalH * 60);
 
       return {

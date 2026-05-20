@@ -7,11 +7,15 @@ interface ShiftSummary {
   endTime: Date;
   totalMinutes: number;
   regularMinutes: number;
-  overtimeMinutes: number;
   nightMinutes: number;
+  overtimeMinutes: number;
   nightOvertimeMinutes: number;
   holidayMinutes: number;
+  holidayOvertimeMinutes: number;
+  holidayNightOvertimeMinutes: number;
   sundayMinutes: number;
+  sundayOvertimeMinutes: number;
+  sundayNightOvertimeMinutes: number;
   payment: number;
 }
 
@@ -45,11 +49,15 @@ export function salidaResponse(s: ShiftSummary): string {
     ``,
     `📊 Resumen:`,
     `  - Ordinarias: ${formatDuration(s.regularMinutes)}`,
-    `  - Extras: ${formatDuration(s.overtimeMinutes)}`,
     `  - Nocturnas: ${formatDuration(s.nightMinutes)}`,
+    `  - Extras: ${formatDuration(s.overtimeMinutes)}`,
     `  - Extras nocturnas: ${formatDuration(s.nightOvertimeMinutes)}`,
     `  - Festivas: ${formatDuration(s.holidayMinutes)}`,
+    `  - Extras festivas: ${formatDuration(s.holidayOvertimeMinutes)}`,
+    `  - Extras festivas nocturnas: ${formatDuration(s.holidayNightOvertimeMinutes)}`,
     `  - Dominicales: ${formatDuration(s.sundayMinutes)}`,
+    `  - Extras dominicales: ${formatDuration(s.sundayOvertimeMinutes)}`,
+    `  - Extras dominicales nocturnas: ${formatDuration(s.sundayNightOvertimeMinutes)}`,
     ``,
     `💰 Ganancia aproximada:`,
     `  ${formatCOP(s.payment)}`,
@@ -60,11 +68,15 @@ export function salidaResponse(s: ShiftSummary): string {
 interface PeriodSummary {
   periodLabel: string;
   regularMinutes: number;
-  overtimeMinutes: number;
   nightMinutes: number;
+  overtimeMinutes: number;
   nightOvertimeMinutes: number;
   holidayMinutes: number;
+  holidayOvertimeMinutes: number;
+  holidayNightOvertimeMinutes: number;
   sundayMinutes: number;
+  sundayOvertimeMinutes: number;
+  sundayNightOvertimeMinutes: number;
   payment: number;
 }
 
@@ -75,11 +87,15 @@ export function quincenaResponse(p: PeriodSummary): string {
     ``,
     `⏱️ Resumen:`,
     `  - Ordinarias: ${formatDuration(p.regularMinutes)}`,
-    `  - Extras: ${formatDuration(p.overtimeMinutes)}`,
     `  - Nocturnas: ${formatDuration(p.nightMinutes)}`,
+    `  - Extras: ${formatDuration(p.overtimeMinutes)}`,
     `  - Extras nocturnas: ${formatDuration(p.nightOvertimeMinutes)}`,
     `  - Festivas: ${formatDuration(p.holidayMinutes)}`,
+    `  - Extras festivas: ${formatDuration(p.holidayOvertimeMinutes)}`,
+    `  - Extras festivas nocturnas: ${formatDuration(p.holidayNightOvertimeMinutes)}`,
     `  - Dominicales: ${formatDuration(p.sundayMinutes)}`,
+    `  - Extras dominicales: ${formatDuration(p.sundayOvertimeMinutes)}`,
+    `  - Extras dominicales nocturnas: ${formatDuration(p.sundayNightOvertimeMinutes)}`,
     ``,
     `💰 Pago aproximado:`,
     `  ${formatCOP(p.payment)}`,
@@ -95,11 +111,15 @@ export function hoyResponse(s: ShiftSummary): string {
     ``,
     `📊 Resumen:`,
     `  - Ordinarias: ${formatDuration(s.regularMinutes)}`,
-    `  - Extras: ${formatDuration(s.overtimeMinutes)}`,
     `  - Nocturnas: ${formatDuration(s.nightMinutes)}`,
+    `  - Extras: ${formatDuration(s.overtimeMinutes)}`,
     `  - Extras nocturnas: ${formatDuration(s.nightOvertimeMinutes)}`,
     `  - Festivas: ${formatDuration(s.holidayMinutes)}`,
+    `  - Extras festivas: ${formatDuration(s.holidayOvertimeMinutes)}`,
+    `  - Extras festivas nocturnas: ${formatDuration(s.holidayNightOvertimeMinutes)}`,
     `  - Dominicales: ${formatDuration(s.sundayMinutes)}`,
+    `  - Extras dominicales: ${formatDuration(s.sundayOvertimeMinutes)}`,
+    `  - Extras dominicales nocturnas: ${formatDuration(s.sundayNightOvertimeMinutes)}`,
     ``,
     `💰 ${formatCOP(s.payment)}`,
   ];
