@@ -17,6 +17,8 @@ export type Env = {
 
 const app = new Hono<{ Bindings: Env }>();
 
+app.get('/', (c) => c.text('WorkTime Bot is running!'));
+
 function setupBot(token: string, db: DbInstance) {
   const bot = new Bot(token);
 
