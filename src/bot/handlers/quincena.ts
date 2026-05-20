@@ -6,7 +6,7 @@ import { eq, and, gte, lte } from 'drizzle-orm';
 import { getCurrentPeriod } from '#/services/periods';
 
 export function registerQuincenaHandler(bot: any) {
-  bot.command('quincena', async (ctx: BotContext) => {
+  bot.hears(/^(quincena)$/i, async (ctx: BotContext) => {
     const telegramId = String(ctx.from!.id);
 
     const user = await ctx.db.select().from(users).where(eq(users.telegramId, telegramId)).get();
