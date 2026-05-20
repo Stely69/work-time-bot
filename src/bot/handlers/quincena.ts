@@ -1,5 +1,5 @@
 import type { BotContext } from '#/bot/client';
-import { colombiaDayToUTCRange, colombiaNowUTC } from '#/utils/date';
+import { colombiaDayToUTCRange } from '#/utils/date';
 import { quincenaResponse } from '#/utils/messages';
 import { users, shifts } from '#/db/schema';
 import { eq, and, gte, lte } from 'drizzle-orm';
