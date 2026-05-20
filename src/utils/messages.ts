@@ -1,5 +1,9 @@
-import { formatDateColombia, formatTimeColombia, formatDuration } from '#/utils/date';
-import { formatCOP } from '#/utils/numbers';
+import {
+  formatDateColombia,
+  formatTimeColombia,
+  formatDuration,
+} from "#/utils/date";
+import { formatCOP } from "#/utils/numbers";
 
 interface ShiftSummary {
   date: string;
@@ -28,7 +32,7 @@ export function entradaResponse(date: Date): string {
     ``,
     `🕒 Hora de inicio:`,
     `  ${formatTimeColombia(date)}`,
-  ].join('\n');
+  ].join("\n");
 }
 
 export function salidaResponse(s: ShiftSummary): string {
@@ -48,21 +52,31 @@ export function salidaResponse(s: ShiftSummary): string {
     `  ${formatDuration(s.totalMinutes)}`,
     ``,
     `📊 Resumen:`,
-    `  - Ordinarias: ${formatDuration(s.regularMinutes)}`,
-    `  - Nocturnas: ${formatDuration(s.nightMinutes)}`,
-    `  - Extras: ${formatDuration(s.overtimeMinutes)}`,
+
+    `  - Ordinarias diurnas: ${formatDuration(s.regularMinutes)}`,
+    `  - Ordinarias nocturnas: ${formatDuration(s.nightMinutes)}`,
+
+    `  ───────────────────────────`,
+
+    `  - Extras diurnas: ${formatDuration(s.overtimeMinutes)}`,
     `  - Extras nocturnas: ${formatDuration(s.nightOvertimeMinutes)}`,
+
+    `  ───────────────────────────`,
+
     `  - Festivas: ${formatDuration(s.holidayMinutes)}`,
-    `  - Extras festivas: ${formatDuration(s.holidayOvertimeMinutes)}`,
+    `  - Extras festivas diurnas: ${formatDuration(s.holidayOvertimeMinutes)}`,
     `  - Extras festivas nocturnas: ${formatDuration(s.holidayNightOvertimeMinutes)}`,
+
+    `  ───────────────────────────`,
+
     `  - Dominicales: ${formatDuration(s.sundayMinutes)}`,
-    `  - Extras dominicales: ${formatDuration(s.sundayOvertimeMinutes)}`,
+    `  - Extras dominicales diurnas: ${formatDuration(s.sundayOvertimeMinutes)}`,
     `  - Extras dominicales nocturnas: ${formatDuration(s.sundayNightOvertimeMinutes)}`,
     ``,
     `💰 Ganancia aproximada:`,
     `  ${formatCOP(s.payment)}`,
   ];
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 interface PeriodSummary {
@@ -84,58 +98,97 @@ export function quincenaResponse(p: PeriodSummary): string {
   const lines = [
     `📅 Corte actual:`,
     `  ${p.periodLabel}`,
+
     ``,
+
     `⏱️ Resumen:`,
-    `  - Ordinarias: ${formatDuration(p.regularMinutes)}`,
-    `  - Nocturnas: ${formatDuration(p.nightMinutes)}`,
-    `  - Extras: ${formatDuration(p.overtimeMinutes)}`,
+
+    `  - Ordinarias diurnas: ${formatDuration(p.regularMinutes)}`,
+    `  - Ordinarias nocturnas: ${formatDuration(p.nightMinutes)}`,
+
+    `  ───────────────────────────`,
+
+    `  - Extras diurnas: ${formatDuration(p.overtimeMinutes)}`,
     `  - Extras nocturnas: ${formatDuration(p.nightOvertimeMinutes)}`,
+
+    `  ───────────────────────────`,
+
     `  - Festivas: ${formatDuration(p.holidayMinutes)}`,
-    `  - Extras festivas: ${formatDuration(p.holidayOvertimeMinutes)}`,
+    `  - Extras festivas diurnas: ${formatDuration(p.holidayOvertimeMinutes)}`,
     `  - Extras festivas nocturnas: ${formatDuration(p.holidayNightOvertimeMinutes)}`,
+
+    `  ───────────────────────────`,
+
     `  - Dominicales: ${formatDuration(p.sundayMinutes)}`,
-    `  - Extras dominicales: ${formatDuration(p.sundayOvertimeMinutes)}`,
+    `  - Extras dominicales diurnas: ${formatDuration(p.sundayOvertimeMinutes)}`,
     `  - Extras dominicales nocturnas: ${formatDuration(p.sundayNightOvertimeMinutes)}`,
+
     ``,
+
     `💰 Pago aproximado:`,
     `  ${formatCOP(p.payment)}`,
   ];
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 export function hoyResponse(s: ShiftSummary): string {
   const lines = [
     `📅 Hoy: ${s.date}`,
+
     ``,
-    `⏱️ Total: ${formatDuration(s.totalMinutes)}`,
+
+    `⏱️ Total trabajado: ${formatDuration(s.totalMinutes)}`,
+
     ``,
+
     `📊 Resumen:`,
-    `  - Ordinarias: ${formatDuration(s.regularMinutes)}`,
-    `  - Nocturnas: ${formatDuration(s.nightMinutes)}`,
-    `  - Extras: ${formatDuration(s.overtimeMinutes)}`,
+
+    `  - Ordinarias diurnas: ${formatDuration(s.regularMinutes)}`,
+    `  - Ordinarias nocturnas: ${formatDuration(s.nightMinutes)}`,
+
+    `  ───────────────────────────`,
+
+    `  - Extras diurnas: ${formatDuration(s.overtimeMinutes)}`,
     `  - Extras nocturnas: ${formatDuration(s.nightOvertimeMinutes)}`,
+
+    `  ───────────────────────────`,
+
     `  - Festivas: ${formatDuration(s.holidayMinutes)}`,
-    `  - Extras festivas: ${formatDuration(s.holidayOvertimeMinutes)}`,
+    `  - Extras festivas diurnas: ${formatDuration(s.holidayOvertimeMinutes)}`,
     `  - Extras festivas nocturnas: ${formatDuration(s.holidayNightOvertimeMinutes)}`,
+
+    `  ───────────────────────────`,
+
     `  - Dominicales: ${formatDuration(s.sundayMinutes)}`,
-    `  - Extras dominicales: ${formatDuration(s.sundayOvertimeMinutes)}`,
+    `  - Extras dominicales diurnas: ${formatDuration(s.sundayOvertimeMinutes)}`,
     `  - Extras dominicales nocturnas: ${formatDuration(s.sundayNightOvertimeMinutes)}`,
+
     ``,
-    `💰 ${formatCOP(s.payment)}`,
+
+    `💰 Pago aproximado:`,
+    `  ${formatCOP(s.payment)}`,
   ];
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 export function historialResponse(
-  shifts: { date: string; start: string; end: string; total: number; payment: number }[]
+  shifts: {
+    date: string;
+    start: string;
+    end: string;
+    total: number;
+    payment: number;
+  }[],
 ): string {
-  if (shifts.length === 0) return '📋 No hay turnos registrados.';
+  if (shifts.length === 0) return "📋 No hay turnos registrados.";
 
-  const lines = ['📋 Últimos turnos:', ''];
+  const lines = ["📋 Últimos turnos:", ""];
   for (const s of shifts) {
-    lines.push(`  ${s.date} → ${s.start} - ${s.end} (${formatDuration(s.total)}) ${formatCOP(s.payment)}`);
+    lines.push(
+      `  ${s.date} → ${s.start} - ${s.end} (${formatDuration(s.total)}) ${formatCOP(s.payment)}`,
+    );
   }
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 export function tarifaResponse(rate: number): string {
