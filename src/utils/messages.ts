@@ -9,6 +9,7 @@ interface ShiftSummary {
   regularMinutes: number;
   overtimeMinutes: number;
   nightMinutes: number;
+  nightOvertimeMinutes: number;
   holidayMinutes: number;
   sundayMinutes: number;
   payment: number;
@@ -46,6 +47,7 @@ export function salidaResponse(s: ShiftSummary): string {
     `  - Ordinarias: ${formatDuration(s.regularMinutes)}`,
     `  - Extras: ${formatDuration(s.overtimeMinutes)}`,
     `  - Nocturnas: ${formatDuration(s.nightMinutes)}`,
+    `  - Extras nocturnas: ${formatDuration(s.nightOvertimeMinutes)}`,
     `  - Festivas: ${formatDuration(s.holidayMinutes)}`,
     `  - Dominicales: ${formatDuration(s.sundayMinutes)}`,
     ``,
@@ -60,6 +62,7 @@ interface PeriodSummary {
   regularMinutes: number;
   overtimeMinutes: number;
   nightMinutes: number;
+  nightOvertimeMinutes: number;
   holidayMinutes: number;
   sundayMinutes: number;
   payment: number;
@@ -74,6 +77,7 @@ export function quincenaResponse(p: PeriodSummary): string {
     `  - Ordinarias: ${formatDuration(p.regularMinutes)}`,
     `  - Extras: ${formatDuration(p.overtimeMinutes)}`,
     `  - Nocturnas: ${formatDuration(p.nightMinutes)}`,
+    `  - Extras nocturnas: ${formatDuration(p.nightOvertimeMinutes)}`,
     `  - Festivas: ${formatDuration(p.holidayMinutes)}`,
     `  - Dominicales: ${formatDuration(p.sundayMinutes)}`,
     ``,
@@ -93,6 +97,7 @@ export function hoyResponse(s: ShiftSummary): string {
     `  - Ordinarias: ${formatDuration(s.regularMinutes)}`,
     `  - Extras: ${formatDuration(s.overtimeMinutes)}`,
     `  - Nocturnas: ${formatDuration(s.nightMinutes)}`,
+    `  - Extras nocturnas: ${formatDuration(s.nightOvertimeMinutes)}`,
     `  - Festivas: ${formatDuration(s.holidayMinutes)}`,
     `  - Dominicales: ${formatDuration(s.sundayMinutes)}`,
     ``,

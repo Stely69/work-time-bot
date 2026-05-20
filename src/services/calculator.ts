@@ -12,6 +12,7 @@ export interface ShiftResult {
   regularMinutes: number;
   overtimeMinutes: number;
   nightMinutes: number;
+  nightOvertimeMinutes: number;
   holidayMinutes: number;
   sundayMinutes: number;
 }
@@ -31,6 +32,7 @@ export function calculateShift(startTime: Date, endTime: Date): ShiftResult {
   let regularMinutes = 0;
   let overtimeMinutes = 0;
   let nightMinutes = 0;
+  let nightOvertimeMinutes = 0;
   let holidayMinutes = 0;
   let sundayMinutes = 0;
 
@@ -73,9 +75,9 @@ export function calculateShift(startTime: Date, endTime: Date): ShiftResult {
   if (!isHol && !isSun) {
     if (regularMinutes + nightMinutes > MAX_REGULAR_MINUTES) {
       const excess = regularMinutes + nightMinutes - MAX_REGULAR_MINUTES;
-      const nightOvertime = Math.min(excess, nightMinutes);
-      nightMinutes -= nightOvertime;
-      regularMinutes -= excess - nightOvertime;
+      nightOvertimeMinutes = Math.min(excess, nightMinutes);
+      nightMinutes -= nightOvertimeMinutes;
+      regularMinutes -= excess - nightOvertimeMinutes;
       overtimeMinutes = excess;
     }
   }
@@ -88,6 +90,7 @@ export function calculateShift(startTime: Date, endTime: Date): ShiftResult {
     regularMinutes,
     overtimeMinutes,
     nightMinutes,
+    nightOvertimeMinutes,
     holidayMinutes,
     sundayMinutes,
   };

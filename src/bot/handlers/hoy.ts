@@ -39,6 +39,7 @@ export function registerHoyHandler(bot: any) {
     let totalRegular = 0;
     let totalOvertime = 0;
     let totalNight = 0;
+    let totalNightOvertime = 0;
     let totalHoliday = 0;
     let totalSunday = 0;
     let totalPayment = 0;
@@ -48,10 +49,11 @@ export function registerHoyHandler(bot: any) {
       totalRegular += (s.regularHours ?? 0) * 60;
       totalOvertime += (s.overtimeHours ?? 0) * 60;
       totalNight += (s.nightHours ?? 0) * 60;
+      totalNightOvertime += (s.nightOvertimeHours ?? 0) * 60;
       totalHoliday += (s.holidayHours ?? 0) * 60;
       totalSunday += (s.sundayHours ?? 0) * 60;
       totalPayment += (s.estimatedPayment ?? 0);
-      totalMinutes += ((s.regularHours ?? 0) + (s.overtimeHours ?? 0) + (s.nightHours ?? 0) + (s.holidayHours ?? 0) + (s.sundayHours ?? 0)) * 60;
+      totalMinutes += ((s.regularHours ?? 0) + (s.overtimeHours ?? 0) + (s.nightHours ?? 0) + (s.nightOvertimeHours ?? 0) + (s.holidayHours ?? 0) + (s.sundayHours ?? 0)) * 60;
     }
 
     await ctx.reply(
@@ -63,6 +65,7 @@ export function registerHoyHandler(bot: any) {
         regularMinutes: Math.round(totalRegular),
         overtimeMinutes: Math.round(totalOvertime),
         nightMinutes: Math.round(totalNight),
+        nightOvertimeMinutes: Math.round(totalNightOvertime),
         holidayMinutes: Math.round(totalHoliday),
         sundayMinutes: Math.round(totalSunday),
         payment: Math.round(totalPayment),

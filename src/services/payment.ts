@@ -2,6 +2,7 @@ interface PaymentConfig {
   hourlyRate: number;
   overtimeRate: number;
   nightSurcharge: number;
+  nightOvertimeRate: number;
   holidaySurcharge: number;
   sundaySurcharge: number;
 }
@@ -10,6 +11,7 @@ interface HoursBreakdown {
   regularMinutes: number;
   overtimeMinutes: number;
   nightMinutes: number;
+  nightOvertimeMinutes: number;
   holidayMinutes: number;
   sundayMinutes: number;
 }
@@ -25,8 +27,9 @@ export function calculatePayment(
   const regular = toHours(hours.regularMinutes) * base;
   const overtime = toHours(hours.overtimeMinutes) * base * config.overtimeRate;
   const night = toHours(hours.nightMinutes) * base * config.nightSurcharge;
+  const nightOvertime = toHours(hours.nightOvertimeMinutes) * base * config.nightOvertimeRate;
   const holiday = toHours(hours.holidayMinutes) * base * config.holidaySurcharge;
   const sunday = toHours(hours.sundayMinutes) * base * config.sundaySurcharge;
 
-  return regular + overtime + night + holiday + sunday;
+  return regular + overtime + night + nightOvertime + holiday + sunday;
 }
