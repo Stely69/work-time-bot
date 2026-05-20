@@ -31,9 +31,9 @@ export const config = sqliteTable('config', {
   hourlyRate: real('hourly_rate').default(8000),
   overtimeRate: real('overtime_rate').default(1.25),
   nightSurcharge: real('night_surcharge').default(1.35),
-  nightOvertimeRate: real('night_overtime_rate').default(1.75),
-  holidaySurcharge: real('holiday_surcharge').default(1.75),
-  sundaySurcharge: real('sunday_surcharge').default(1.75),
+  nightOvertimeRate: real('night_overtime_rate').default(1.8),
+  holidaySurcharge: real('holiday_surcharge').default(1.8),
+  sundaySurcharge: real('sunday_surcharge').default(1.8),
   updatedAt: text('updated_at').default(sql`(datetime('now'))`),
 });
 
