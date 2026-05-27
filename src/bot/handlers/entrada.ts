@@ -1,12 +1,13 @@
-import type { BotContext } from '#/bot/client';
+import { Bot } from 'grammy';
+import type { BotContext } from '#/bot/types';
 import { colombiaNowUTC } from '#/utils/date';
 import { entradaResponse } from '#/utils/messages';
 import { users, shifts } from '#/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { mainKeyboard } from '#/bot/keyboards';
 
-export function registerEntradaHandler(bot: any) {
-  bot.hears(/^(entrada)$/i, async (ctx: BotContext) => {
+export function registerEntradaHandler(bot: Bot<BotContext>) {
+  bot.hears(/^(entrada)$/i, async (ctx) => {
     const telegramId = String(ctx.from!.id);
     const now = colombiaNowUTC();
 

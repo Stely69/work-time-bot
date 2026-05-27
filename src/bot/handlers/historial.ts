@@ -1,10 +1,11 @@
-import type { BotContext } from '#/bot/client';
+import { Bot } from 'grammy';
+import type { BotContext } from '#/bot/types';
 import { users, shifts } from '#/db/schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { historialResponse } from '#/utils/messages';
 
-export function registerHistorialHandler(bot: any) {
-  bot.command('historial', async (ctx: BotContext) => {
+export function registerHistorialHandler(bot: Bot<BotContext>) {
+  bot.command('historial', async (ctx) => {
     const telegramId = String(ctx.from!.id);
 
     const user = await ctx.db.select().from(users).where(eq(users.telegramId, telegramId)).get();

@@ -1,4 +1,5 @@
-import type { BotContext } from '#/bot/client';
+import { Bot } from 'grammy';
+import type { BotContext } from '#/bot/types';
 import { colombiaNowUTC, formatDateColombia } from '#/utils/date';
 import { salidaResponse } from '#/utils/messages';
 import { users, shifts, config as configTable } from '#/db/schema';
@@ -7,8 +8,8 @@ import { mainKeyboard } from '#/bot/keyboards';
 import { calculateShift } from '#/services/calculator';
 import { calculatePayment } from '#/services/payment';
 
-export function registerSalidaHandler(bot: any) {
-  bot.hears(/^(salida)$/i, async (ctx: BotContext) => {
+export function registerSalidaHandler(bot: Bot<BotContext>) {
+  bot.hears(/^(salida)$/i, async (ctx) => {
     const telegramId = String(ctx.from!.id);
 
     const user = await ctx.db.select().from(users).where(eq(users.telegramId, telegramId)).get();
@@ -40,20 +41,7 @@ export function registerSalidaHandler(bot: any) {
       cfg = inserted;
     }
 
-    const payment = calculatePayment(
-      {
-        regularMinutes: result.regularMinutes,
-        nightMinutes: result.nightMinutes,
-        overtimeMinutes: result.overtimeMinutes,
-        nightOvertimeMinutes: result.nightOvertimeMinutes,
-        holidayMinutes: result.holidayMinutes,
-        holidayOvertimeMinutes: result.holidayOvertimeMinutes,
-        holidayNightOvertimeMinutes: result.holidayNightOvertimeMinutes,
-        sundayMinutes: result.sundayMinutes,
-        sundayOvertimeMinutes: result.sundayOvertimeMinutes,
-        sundayNightOvertimeMinutes: result.sundayNightOvertimeMinutes,
-      },
-      {
+    const payment = calculatePayment(result, {
         hourlyRate: cfg.hourlyRate ?? 8000,
         overtimeRate: cfg.overtimeRate ?? 1.25,
         nightSurcharge: cfg.nightSurcharge ?? 1.35,

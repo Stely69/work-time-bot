@@ -1,11 +1,13 @@
-import type { BotContext } from '#/bot/client';
+import { Bot } from 'grammy';
+import type { BotContext } from '#/bot/types';
 import { colombiaDateParts, colombiaNowUTC, formatDateColombia, colombiaDayToUTCRange } from '#/utils/date';
 import { hoyResponse } from '#/utils/messages';
 import { users, shifts } from '#/db/schema';
 import { eq, and, gte, lte } from 'drizzle-orm';
+import { aggregateShifts } from '#/services/aggregator';
 
-export function registerHoyHandler(bot: any) {
-  bot.command('hoy', async (ctx: BotContext) => {
+export function registerHoyHandler(bot: Bot<BotContext>) {
+  bot.command('hoy', async (ctx) => {
     const telegramId = String(ctx.from!.id);
 
     const user = await ctx.db.select().from(users).where(eq(users.telegramId, telegramId)).get();
@@ -36,57 +38,25 @@ export function registerHoyHandler(bot: any) {
       return;
     }
 
-    let totalRegular = 0;
-    let totalNight = 0;
-    let totalOvertime = 0;
-    let totalNightOvertime = 0;
-    let totalHoliday = 0;
-    let totalHolidayOvertime = 0;
-    let totalHolidayNightOvertime = 0;
-    let totalSunday = 0;
-    let totalSundayOvertime = 0;
-    let totalSundayNightOvertime = 0;
-    let totalPayment = 0;
-    let totalMinutes = 0;
-
-    for (const s of dayShifts) {
-      totalRegular += (s.regularHours ?? 0) * 60;
-      totalNight += (s.nightHours ?? 0) * 60;
-      totalOvertime += (s.overtimeHours ?? 0) * 60;
-      totalNightOvertime += (s.nightOvertimeHours ?? 0) * 60;
-      totalHoliday += (s.holidayHours ?? 0) * 60;
-      totalHolidayOvertime += (s.holidayOvertimeHours ?? 0) * 60;
-      totalHolidayNightOvertime += (s.holidayNightOvertimeHours ?? 0) * 60;
-      totalSunday += (s.sundayHours ?? 0) * 60;
-      totalSundayOvertime += (s.sundayOvertimeHours ?? 0) * 60;
-      totalSundayNightOvertime += (s.sundayNightOvertimeHours ?? 0) * 60;
-      totalPayment += (s.estimatedPayment ?? 0);
-      totalMinutes += (
-        (s.regularHours ?? 0) + (s.nightHours ?? 0) + (s.overtimeHours ?? 0) +
-        (s.nightOvertimeHours ?? 0) + (s.holidayHours ?? 0) +
-        (s.holidayOvertimeHours ?? 0) + (s.holidayNightOvertimeHours ?? 0) +
-        (s.sundayHours ?? 0) + (s.sundayOvertimeHours ?? 0) +
-        (s.sundayNightOvertimeHours ?? 0)
-      ) * 60;
-    }
+    const a = aggregateShifts(dayShifts);
 
     await ctx.reply(
       hoyResponse({
         date: formatDateColombia(today),
         startTime: today,
         endTime: today,
-        totalMinutes: Math.round(totalMinutes),
-        regularMinutes: Math.round(totalRegular),
-        nightMinutes: Math.round(totalNight),
-        overtimeMinutes: Math.round(totalOvertime),
-        nightOvertimeMinutes: Math.round(totalNightOvertime),
-        holidayMinutes: Math.round(totalHoliday),
-        holidayOvertimeMinutes: Math.round(totalHolidayOvertime),
-        holidayNightOvertimeMinutes: Math.round(totalHolidayNightOvertime),
-        sundayMinutes: Math.round(totalSunday),
-        sundayOvertimeMinutes: Math.round(totalSundayOvertime),
-        sundayNightOvertimeMinutes: Math.round(totalSundayNightOvertime),
-        payment: Math.round(totalPayment),
+        totalMinutes: Math.round(a.totalMinutes),
+        regularMinutes: Math.round(a.regularMinutes),
+        nightMinutes: Math.round(a.nightMinutes),
+        overtimeMinutes: Math.round(a.overtimeMinutes),
+        nightOvertimeMinutes: Math.round(a.nightOvertimeMinutes),
+        holidayMinutes: Math.round(a.holidayMinutes),
+        holidayOvertimeMinutes: Math.round(a.holidayOvertimeMinutes),
+        holidayNightOvertimeMinutes: Math.round(a.holidayNightOvertimeMinutes),
+        sundayMinutes: Math.round(a.sundayMinutes),
+        sundayOvertimeMinutes: Math.round(a.sundayOvertimeMinutes),
+        sundayNightOvertimeMinutes: Math.round(a.sundayNightOvertimeMinutes),
+        payment: Math.round(a.payment),
       })
     );
   });

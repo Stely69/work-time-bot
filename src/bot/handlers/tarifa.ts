@@ -1,10 +1,11 @@
-import type { BotContext } from '#/bot/client';
+import { Bot } from 'grammy';
+import type { BotContext } from '#/bot/types';
 import { users, config as configTable } from '#/db/schema';
 import { eq } from 'drizzle-orm';
 import { tarifaResponse, errorMessage } from '#/utils/messages';
 
-export function registerTarifaHandler(bot: any) {
-  bot.command('tarifa', async (ctx: BotContext) => {
+export function registerTarifaHandler(bot: Bot<BotContext>) {
+  bot.command('tarifa', async (ctx) => {
     const telegramId = String(ctx.from!.id);
     const text = ctx.message?.text ?? '';
     const parts = text.split(' ');
