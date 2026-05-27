@@ -45,8 +45,3 @@ export const config = sqliteTable('config', {
   updatedAt: text('updated_at').default(sql`(datetime('now'))`),
 });
 
-export const migrations = sqliteTable('__drizzle_migrations', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  hash: text('hash').notNull(),
-  createdAt: text('created_at').default(sql`(datetime('now'))`),
-});
