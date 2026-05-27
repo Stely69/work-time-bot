@@ -4,6 +4,10 @@ import type { Update } from 'grammy/types';
 import type { BotContext } from '#/bot/types';
 import type { DbInstance } from '#/db';
 import { createDb } from '#/db';
+import { eq } from 'drizzle-orm';
+import { users } from '#/db/schema';
+import { mainKeyboard } from '#/bot/keyboards';
+import { startResponse } from '#/utils/messages';
 import { registerEntradaHandler } from '#/bot/handlers/entrada';
 import { registerSalidaHandler } from '#/bot/handlers/salida';
 import { registerHoyHandler } from '#/bot/handlers/hoy';
@@ -25,6 +29,24 @@ function setupBot(token: string, db: DbInstance) {
 
   bot.use(async (ctx, next) => {
     ctx.db = db;
+    await next();
+  });
+
+  bot.use(async (ctx, next) => {
+    if (!ctx.from) return next();
+
+    const telegramId = String(ctx.from.id);
+    const existing = await ctx.db.select().from(users).where(eq(users.telegramId, telegramId)).get();
+
+    if (!existing) {
+      await ctx.db.insert(users).values({
+        telegramId,
+        name: ctx.from.first_name,
+      }).run();
+
+      await ctx.reply(startResponse(), { reply_markup: mainKeyboard });
+    }
+
     await next();
   });
 

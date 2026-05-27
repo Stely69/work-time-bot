@@ -195,6 +195,22 @@ export function tarifaResponse(rate: number): string {
   return `✅ Tarifa actualizada: ${formatCOP(rate)}/hora`;
 }
 
+export function startResponse(): string {
+  return [
+    `👋 ¡Bienvenido al WorkTime Bot!`,
+    ``,
+    `Este bot te ayuda a registrar tu jornada laboral y calcular tu pago aproximado según las normas colombianas.`,
+    ``,
+    `📌 Comandos disponibles:`,
+    ``,
+    `  • Entrada  —  Registrar inicio de turno`,
+    `  • Salida   —  Finalizar turno y ver resumen`,
+    `  • Quincena —  Ver resumen del periodo actual`,
+    ``,
+    `💡 Los botones están siempre visibles. ¡Solo presiona "Entrada" para empezar!`,
+  ].join('\n');
+}
+
 export function errorMessage(msg: string): string {
   return `❌ ${msg}`;
 }
