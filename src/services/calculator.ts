@@ -1,22 +1,13 @@
 import { colombiaMinutes, colombiaDateStr, colombiaIsSunday } from '#/utils/date';
 import { isHoliday } from '#/services/colombian-holidays';
+import type { HoursBreakdown } from '#/types';
 
 const NIGHT_START = 21 * 60;
 const MAX_REGULAR_MINUTES = 8 * 60;
 
-export interface ShiftResult {
+export interface ShiftResult extends HoursBreakdown {
   date: string;
   totalMinutes: number;
-  regularMinutes: number;
-  nightMinutes: number;
-  overtimeMinutes: number;
-  nightOvertimeMinutes: number;
-  holidayMinutes: number;
-  holidayOvertimeMinutes: number;
-  holidayNightOvertimeMinutes: number;
-  sundayMinutes: number;
-  sundayOvertimeMinutes: number;
-  sundayNightOvertimeMinutes: number;
 }
 
 export function calculateShift(startTime: Date, endTime: Date): ShiftResult {
