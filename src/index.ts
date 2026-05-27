@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { Bot } from 'grammy';
 import type { Update } from 'grammy/types';
+import type { BotContext } from '#/bot/types';
 import type { DbInstance } from '#/db';
 import { createDb } from '#/db';
 import { registerEntradaHandler } from '#/bot/handlers/entrada';
@@ -20,10 +21,10 @@ const app = new Hono<{ Bindings: Env }>();
 app.get('/', (c) => c.text('WorkTime Bot is running!'));
 
 function setupBot(token: string, db: DbInstance) {
-  const bot = new Bot(token);
+  const bot = new Bot<BotContext>(token);
 
   bot.use(async (ctx, next) => {
-    (ctx as any).db = db;
+    ctx.db = db;
     await next();
   });
 
@@ -41,7 +42,7 @@ function setupBot(token: string, db: DbInstance) {
   return bot;
 }
 
-let botInstance: Bot | null = null;
+let botInstance: Bot<BotContext> | null = null;
 let botInit: Promise<void> | null = null;
 
 app.post('/webhook', async (c) => {
