@@ -7,6 +7,7 @@ import { eq, and } from 'drizzle-orm';
 import { mainKeyboard } from '#/bot/keyboards';
 import { calculateShift } from '#/services/calculator';
 import { calculatePayment } from '#/services/payment';
+import { editSalidaKeyboard } from '#/bot/handlers/edit';
 
 export function registerSalidaHandler(bot: Bot<BotContext>) {
   bot.hears(/^(salida)$/i, async (ctx) => {
@@ -92,7 +93,7 @@ export function registerSalidaHandler(bot: Bot<BotContext>) {
         sundayNightOvertimeMinutes: result.sundayNightOvertimeMinutes,
         payment,
       }),
-      { reply_markup: mainKeyboard }
+      { reply_markup: editSalidaKeyboard(activeShift.id) }
     );
   });
 }

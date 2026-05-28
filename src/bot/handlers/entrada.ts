@@ -5,6 +5,7 @@ import { entradaResponse } from '#/utils/messages';
 import { users, shifts } from '#/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { mainKeyboard } from '#/bot/keyboards';
+import { editEntradaKeyboard } from '#/bot/handlers/edit';
 
 export function registerEntradaHandler(bot: Bot<BotContext>) {
   bot.hears(/^(entrada)$/i, async (ctx) => {
@@ -31,12 +32,14 @@ export function registerEntradaHandler(bot: Bot<BotContext>) {
       return;
     }
 
-    await ctx.db.insert(shifts).values({
+    const newShift = await ctx.db.insert(shifts).values({
       userId: user.id,
       startTime: now.toISOString(),
       status: 'active',
-    }).run();
+    }).returning().get();
 
-    await ctx.reply(entradaResponse(now), { reply_markup: mainKeyboard });
+    await ctx.reply(entradaResponse(now), {
+      reply_markup: editEntradaKeyboard(newShift.id),
+    });
   });
 }
