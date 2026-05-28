@@ -14,6 +14,7 @@ import { registerHoyHandler } from '#/bot/handlers/hoy';
 import { registerQuincenaHandler } from '#/bot/handlers/quincena';
 import { registerHistorialHandler } from '#/bot/handlers/historial';
 import { registerTarifaHandler } from '#/bot/handlers/tarifa';
+import { registerEditHandler } from '#/bot/handlers/edit';
 
 export type Env = {
   DB: D1Database;
@@ -54,6 +55,7 @@ function setupBot(token: string, db: DbInstance) {
     console.error('Bot error:', err.message, err.error);
   });
 
+  registerEditHandler(bot);
   registerEntradaHandler(bot);
   registerSalidaHandler(bot);
   registerHoyHandler(bot);
