@@ -77,3 +77,8 @@ export function colombiaDayToUTCRange(year: number, month: number, day: number) 
 export function colombiaNowUTC(): Date {
   return new Date();
 }
+
+export function colombiaTimeToUTC(utcDate: Date, hours: number, minutes: number): Date {
+  const { year, month, day } = colombiaDateParts(utcDate);
+  return new Date(Date.UTC(year, month, day, hours + 5, minutes, 0));
+}
