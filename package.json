@@ -15,14 +15,14 @@
   },
   "dependencies": {
     "drizzle-orm": "^0.45.2",
-    "grammy": "^1.43.0",
-    "hono": "^4.12.23"
+    "grammy": "^1.44.0",
+    "hono": "^4.12.28"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260526.1",
+    "@cloudflare/workers-types": "^4.20260702.1",
     "drizzle-kit": "^0.31.10",
-    "oxlint": "^1.67.0",
+    "oxlint": "^1.73.0",
     "typescript": "^6.0.3",
-    "wrangler": "^4.95.0"
+    "wrangler": "^4.107.0"
   }
 }
